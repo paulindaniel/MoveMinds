@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move Minds</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Estilos Globais e Variáveis de Tema */
+        :root {
+            /* Tema Claro (Padrão) */
+            --body-bg: #f0f2f5;
+            --app-bg: #ffffff;
+            --text-primary: #1c1e21;
+            --text-secondary: #65676b;
+            --border-color: #e0e0e0;
+            --header-icon-color: #606770;
+            --search-bg: #f0f2f5;
+            --card-bg: #f7f7f7;
+            --card-border: #ddd;
+            --btn-dark-bg: #343a40;
+            --btn-primary-bg: #000000;
+            --footer-bg: #ffffff;
+            --footer-icon-inactive: #65676b;
+            --footer-icon-active: #000000;
+            --featured-border: #000000;
+            --check-icon-color: #28a745;
+            --loja-icon-bg: #2d2d2d;
+            --loja-icon-color: #ffffff;
+            --loja-icon-active-bg: #000000;
+            --product-section-bg: #f0f2f5;
+            --menu-bg: #ffffff;
+            --overlay-bg: rgba(0, 0, 0, 0.5);
+            --notification-bg: #2d2d2d;
+            --notification-color: white;
+            --badge-bg: var(--btn-primary-bg);
+            --badge-color: white;
+        }
+
+        .dark-theme {
+            /* Tema Escuro */
+            --body-bg: #1e1e1e;
+            --app-bg: #2c2c2c;
+            --text-primary: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --border-color: #3f3f3f;
+            --header-icon-color: #f0f0f0;
+            --search-bg: #3f3f3f;
+            --card-bg: #3a3a3a;
+            --card-border: #4a4a4a;
+            --btn-dark-bg: #1e1e1e;
+            --btn-primary-bg: #1e1e1e;
+            --footer-bg: #1e1e1e;
+            --footer-icon-inactive: #888;
+            --footer-icon-active: #ffffff;
+            --featured-border: #5a5a5a;
+            --check-icon-color: #4CAF50;
+            --loja-icon-bg: #f0f0f0;
+            --loja-icon-color: #1e1e1e;
+            --loja-icon-active-bg: #ffffff;
+            --product-section-bg: #2c2c2c;
+            --menu-bg: #2c2c2c;
+            --badge-bg: #f0f0f0;
+            --badge-color: #1e1e1e;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            background-color: var(--body-bg);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px; /* Largura máxima para desktop */
+            background-color: var(--app-bg);
+            color: var(--text-primary);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding-bottom: 75px; /* Espaço para o footer em mobile */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Alterado para alinhar itens */
+            padding: 15px 20px;
+            background-color: var(--app-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header .menu-toggle { font-size: 22px; color: var(--header-icon-color); cursor: pointer; }
+        .header .logo { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
+        .header .search-bar { flex-grow: 1; max-width: 450px; display: flex; align-items: center; background-color: var(--search-bg); border-radius: 20px; padding: 8px 12px; margin: 0 15px; /* Alterado para margem horizontal */ transition: background-color 0.3s ease; }
+        .search-bar i { color: var(--text-secondary); margin-right: 8px; font-size: 0.9em; }
+        .search-bar input { flex-grow: 1; background: none; border: none; color: var(--text-primary); font-size: 14px; outline: none; }
+        .search-bar input::placeholder { color: var(--text-secondary); }
+
+        /* Menu Lateral */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100%;
+            background-color: var(--menu-bg);
+            z-index: 1002;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 4px 0px 15px rgba(0,0,0,0.1);
+        }
+
+        .side-menu.open { transform: translateX(0); }
+        .menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .menu-header .logo-menu { font-weight: bold; font-size: 20px; color: var(--text-primary); }
+        .close-menu-btn { font-size: 28px; cursor: pointer; color: var(--text-secondary); }
+        .side-menu nav ul { list-style: none; padding: 0; margin: 0; }
+        .side-menu nav a { display: block; padding: 15px 10px; color: var(--text-primary); text-decoration: none; font-size: 18px; border-radius: 8px; transition: background-color 0.2s ease; position: relative;}
+        .side-menu nav a:hover { background-color: var(--search-bg); }
+        .side-menu nav a i { margin-right: 15px; width: 24px; text-align: center; color: var(--text-secondary); }
+
+        /* Overlay */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--overlay-bg);
+            z-index: 1001; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .overlay.visible { opacity: 1; visibility: visible; }
+        
+        /* Botão de Tema Flutuante */
+        .theme-toggle-fab {
+            position: fixed; bottom: 95px; right: 25px;
+            width: 50px; height: 50px; background-color: var(--loja-icon-bg);
+            color: var(--loja-icon-color); border-radius: 50%; display: grid;
+            place-items: center; font-size: 22px; cursor: pointer;
+            z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        }
+        .theme-toggle-fab:hover { transform: scale(1.1); }
+
+        /* Conteúdo Principal */
+        .hero-image { width: 100%; display: block; max-height: 250px; object-fit: cover; background-color: #e0e0e0; }
+        .section-title { text-align: center; font-size: 16px; color: var(--text-secondary); margin: 25px 0 20px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.3s ease; }
+        
+        .content-padding {
+            padding: 0 15px;
+        }
+        
+        /* Estilos Mobile para Planos */
+        .plans-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .plan-card { background-color: var(--card-bg); border-radius: 8px; padding: 10px; text-align: center; border: 1px solid var(--card-border); display: flex; flex-direction: column; transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease; }
+        .plan-card h3 { font-size: 14px; margin-top: 0; margin-bottom: 4px; color: var(--text-primary); }
+        .plan-card .plan-subtitle { font-size: 9px; color: var(--text-secondary); margin-bottom: 10px; min-height: auto; }
+        .plan-card ul { list-style: none; padding: 0; margin: 0 0 10px 0; text-align: left; flex-grow: 1; }
+        .plan-card ul li { font-size: 10px; color: var(--text-primary); margin-bottom: 5px; display: flex; align-items: center;}
+        .plan-card ul li i.fa-check { color: var(--check-icon-color); margin-right: 5px; font-size: 9px; }
+        .plan-price { font-size: 13px; font-weight: bold; color: var(--text-primary); margin-bottom: 10px; }
+        .btn-subscribe { background-color: var(--btn-primary-bg); color: #ffffff; border: none; padding: 8px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%; align-self: center; transition: background-color 0.3s ease, transform 0.2s ease; }
+
+        /* Estilos Mobile para Produtos */
+        .products-section { margin-top: 20px; padding: 20px 15px; background-color: var(--product-section-bg); transition: background-color 0.3s ease; }
+        .products-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .product-card { background-color: var(--app-bg); border-radius: 10px; text-align: center; padding: 5px 5px 10px 5px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--border-color); transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease; }
+        .product-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background-color: #e9ecef; margin-bottom: 8px; }
+        .product-card .product-name { font-size: 11px; color: var(--text-primary); margin-bottom: 8px; padding: 0 5px; min-height: 28px; display: flex; align-items: center; justify-content: center; flex-grow: 1; }
+        .btn-price { background-color: var(--btn-dark-bg); color: #ffffff; border: none; padding: 6px 8px; border-radius: 15px; font-size: 11px; font-weight: bold; cursor: pointer; display: inline-block; margin: 0 auto; transition: background-color 0.3s ease, transform 0.2s ease; }
+        
+        .plan-card.featured { border: 2px solid var(--featured-border); transform: scale(1.05); }
+        .dark-theme .plan-card.featured { background-color: #252525; }
+        .plan-card:not(.featured) .btn-subscribe { background-color: var(--btn-dark-bg); }
+        .btn-subscribe:hover, .product-card:hover, .plan-card:hover { transform: translateY(-3px); }
+        .btn-price:hover { opacity: 0.9; }
+
+        /* Footer */
+        .footer-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1200px; 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: flex-end;
+            background-color: var(--footer-bg); 
+            padding: 8px 0;
+            border-top: 1px solid var(--border-color); 
+            z-index: 998;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--footer-icon-inactive); font-size: 10px; padding: 5px; flex: 1; text-align: center; transition: color 0.3s ease; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: var(--footer-icon-active); }
+        .nav-item:hover:not(.active) { color: var(--text-primary); }
+        .nav-item.nav-item-loja { position: relative; }
+        .nav-item.nav-item-loja .loja-icon-wrapper { background-color: var(--loja-icon-bg); border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; margin-bottom: 2px; margin-top: -25px; border: 4px solid var(--footer-bg); box-shadow: 0 -3px 6px rgba(0,0,0,0.1); transition: background-color 0.3s ease, border-color 0.3s ease; position: relative; }
+        .nav-item.nav-item-loja .loja-icon-wrapper i { font-size: 24px; color: var(--loja-icon-color); margin-bottom: 0; }
+        .nav-item.nav-item-loja.active .loja-icon-wrapper { background-color: var(--loja-icon-active-bg); }
+        .nav-item.nav-item-loja.active span { color: var(--footer-icon-active); }
+
+        /* Notificação e Crachá do Carrinho */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translate(-50%, 100px); /* Começa fora da tela */
+            background-color: var(--notification-bg);
+            color: var(--notification-color);
+            padding: 12px 25px;
+            border-radius: 8px;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .notification.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0);
+        }
+        .cart-badge {
+            background-color: var(--badge-bg);
+            color: var(--badge-color);
+            border-radius: 50%;
+            padding: 1px 5px;
+            font-size: 10px;
+            font-weight: bold;
+            position: absolute;
+            display: none; /* Escondido por padrão */
+        }
+        .cart-badge.visible {
+            display: block;
+        }
+        .menu-cart-badge { top: 12px; right: 12px; }
+        
+        /* Media Query para Desktop */
+        @media (min-width: 768px) {
+            .hero-image { max-height: 400px; }
+            .content-padding { padding: 0 40px; }
+            .section-title { font-size: 18px; margin: 40px 0 25px 0; }
+            .plans-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 25px;
+            }
+             .plan-card { padding: 25px; }
+            .plan-card h3 { font-size: 22px; }
+            .plan-card .plan-subtitle { font-size: 13px; min-height: 2.5em; }
+            .plan-card ul li { font-size: 14px; }
+            .plan-price { font-size: 20px; }
+            .btn-subscribe { padding: 14px 28px; font-size: 15px; }
+
+            .products-section { padding: 20px 40px; }
+            .products-container {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 20px;
+            }
+            .product-card { padding: 10px 10px 15px 10px; }
+            .product-card img { margin-bottom: 10px; }
+            .product-card .product-name { font-size: 14px; }
+            .btn-price { padding: 10px 14px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="side-menu" class="side-menu">
+        <div class="menu-header"> <span class="logo-menu">Move Minds</span> <span id="close-menu-btn" class="close-menu-btn">&times;</span> </div>
+        <nav>
+            <ul>
+                <li><a href="home.html"><i class="fas fa-home"></i>Início</a></li>
+                <li><a href="planos.html"><i class="fas fa-rocket"></i>Planos</a></li>
+                <li><a href="shop.html"><i class="fas fa-shopping-bag"></i>Produtos</a></li>
+                <li><a href="progresso.html"><i class="fas fa-chart-line"></i>Progresso</a></li>
+                <li><a href="carrinho.php"><i class="fas fa-shopping-cart"></i>Carrinho <span id="menu-cart-badge" class="cart-badge">0</span></a></li>
+                <li><a href="perfil.php"><i class="fas fa-user-circle"></i>Perfil</a></li>
+                <li><a href="configuracoes.html"><i class="fas fa-cog"></i>Configurações</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div id="overlay" class="overlay"></div>
+
+    <div class="main-container" id="main-container">
+        <header class="header">
+            <i class="fas fa-bars menu-toggle" id="menu-toggle"></i>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar">
+            </div>
+            <img src="./assets/logo.png" alt="Logo MN" class="logo">
+        </header>
+        
+        <div class="theme-toggle-fab" id="theme-toggle">
+             <i class="fas fa-moon"></i>
+        </div>
+
+        <section class="hero"> <img src="./assets/banner.png" alt="Move Minds Banner" class="hero-image"> </section>
+        
+        <div class="content-padding">
+            <section class="plans-section"> <h2 class="section-title">Nossos Planos</h2> <div class="plans-container"> <div class="plan-card"> <h3>Move Start+</h3> <p class="plan-subtitle">Perfeito para quem está a começar!</p> <ul> <li><i class="fas fa-check"></i> Acesso a treinos básicos</li> <li><i class="fas fa-check"></i> Comunidade exclusiva</li> <li><i class="fas fa-check"></i> Monitoramento de Progresso</li> </ul> <p class="plan-price">R$ 12,90/mês</p> <button class="btn-subscribe">Assinar Agora!</button> </div> <div class="plan-card featured"> <h3>Move UP+</h3> <p class="plan-subtitle">Pronto para o próximo nível?</p> <ul> <li><i class="fas fa-check"></i> Tudo do Move Start+</li> <li><i class="fas fa-check"></i> Acesso a desafios mensais</li> <li><i class="fas fa-check"></i> Suporte prioritário</li> </ul> <p class="plan-price">R$ 22,30/mês</p> <button class="btn-subscribe">Assinar Agora!</button> </div> <div class="plan-card"> <h3>Move Pro+</h3> <p class="plan-subtitle">Performance máxima e suporte premium.</p> <ul> <li><i class="fas fa-check"></i> Tudo do Move UP+</li> <li><i class="fas fa-check"></i> Acesso a eventos e workshops</li> <li><i class="fas fa-check"></i> Descontos na MoveMinds</li> </ul> <p class="plan-price">R$ 49,99/mês</p> <button class="btn-subscribe">Assinar Agora!</button> </div> </div> </section>
+        </div>
+
+        <section class="products-section"> <div class="content-padding" style="padding:0;"> <h2 class="section-title">Nossos Produtos</h2> <div class="products-container"> <div class="product-card"> <img src="https://placehold.co/200x200/f8f9fa/333?text=Garrafa" alt="Garrafa MoveMinds"> <p class="product-name">Garrafa MoveMinds</p> <button class="btn-price">R$ 27,90</button> </div> <div class="product-card"> <img src="https://placehold.co/200x200/f8f9fa/333?text=Kit+Whey" alt="Kit Whey/Shake"> <p class="product-name">Kit Whey/Shake</p> <button class="btn-price">R$ 120,99</button> </div> <div class="product-card"> <img src="https://placehold.co/200x200/f8f9fa/333?text=Halter" alt="Halter Russo 25KG"> <p class="product-name">Halter Russo 25KG</p> <button class="btn-price">R$ 75,00</button> </div> <div class="product-card"> <img src="https://placehold.co/200x200/f8f9fa/333?text=Fones" alt="Fones de Ouvido"> <p class="product-name">Fones Bluetooth Fit</p> <button class="btn-price">R$ 89,90</button> </div> <div class="product-card"> <img src="https://placehold.co/200x200/f8f9fa/333?text=Tênis" alt="Tênis Esportivo"> <p class="product-name">Tênis Performance Max</p> <button class="btn-price">R$ 249,90</button> </div> <div class="product-card"> <img src="https://placehold.co/200x200/f8f9fa/333?text=Short" alt="Short de Treino"> <p class="product-name">Short DryFit Pro</p> <button class="btn-price">R$ 59,90</button> </div> </div> </div></section>
+        
+        <footer class="footer-nav"> <a href="home.html" class="nav-item active" data-target="inicio"> <i class="fas fa-home"></i> <span>Início</span> </a> <a href="progresso.html" class="nav-item" data-target="progresso"> <i class="fas fa-chart-line"></i> <span>Progresso</span> </a> <a href="shop.html" class="nav-item nav-item-loja" data-target="loja"> <div class="loja-icon-wrapper"> <i class="fas fa-shopping-bag"></i> </div> <span>Loja</span> </a> <a href="configuracoes.html" class="nav-item" data-target="configuracoes"> <i class="fas fa-cog"></i> <span>Configurações</span> </a> <a href="perfil.php" class="nav-item" data-target="perfil"> <i class="fas fa-user-circle"></i> <span>Perfil</span> </a> </footer>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            const themeIcon = themeToggle.querySelector('i');
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sideMenu = document.getElementById('side-menu');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const overlay = document.getElementById('overlay');
+
+            const priceButtons = document.querySelectorAll('.btn-price');
+            const notification = document.getElementById('notification');
+            const menuCartBadge = document.getElementById('menu-cart-badge');
+
+            let cartCount = 0;
+
+            function openMenu() { sideMenu.classList.add('open'); overlay.classList.add('visible'); }
+            function closeMenu() { sideMenu.classList.remove('open'); overlay.classList.remove('visible'); }
+
+            menuToggle.addEventListener('click', openMenu);
+            closeMenuBtn.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', closeMenu);
+
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    body.classList.add('dark-theme');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    body.classList.remove('dark-theme');
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            };
+            
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const isDark = body.classList.contains('dark-theme');
+                if (isDark) {
+                    applyTheme('light');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    applyTheme('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+
+            const navItems = document.querySelectorAll('.footer-nav .nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // O event.preventDefault() foi removido para permitir o redirecionamento.
+                    // A lógica de classe 'active' pode ser gerenciada na página de destino.
+                    navItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            function showNotification(message) {
+                notification.textContent = message;
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 2500); // A notificação desaparece após 2.5 segundos
+            }
+
+            function updateCartBadge() {
+                if (cartCount > 0) {
+                    menuCartBadge.textContent = cartCount;
+                    menuCartBadge.classList.add('visible');
+                } else {
+                    menuCartBadge.classList.remove('visible');
+                }
+            }
+
+            priceButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Previne que outros eventos de clique sejam disparados
+                    cartCount++;
+                    updateCartBadge();
+                    showNotification('Produto adicionado ao carrinho!');
+                    
+                    button.style.transform = 'scale(0.95)';
+                    setTimeout(() => { button.style.transform = 'scale(1)'; }, 150);
+                });
+            });
+
+            document.querySelectorAll('.btn-subscribe').forEach(button => {
+                 button.addEventListener('click', () => {
+                    console.log(`Botão de assinatura clicado.`);
+                    showNotification('Iniciando processo de assinatura!');
+                 });
+            });
+        });
+    </script>
+</body>
+</html>
