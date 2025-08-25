@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move Minds - Início</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Estilos Globais e Variáveis de Tema */
+        :root {
+            /* Tema Claro (Padrão) */
+            --body-bg: #f0f2f5;
+            --app-bg: #ffffff;
+            --text-primary: #1c1e21;
+            --text-secondary: #65676b;
+            --border-color: #e0e0e0;
+            --header-icon-color: #606770;
+            --search-bg: #f0f2f5;
+            --card-bg: #f7f7f7;
+            --card-border: #ddd;
+            --btn-dark-bg: #343a40;
+            --btn-primary-bg: #000000;
+            --footer-bg: #ffffff;
+            --footer-icon-inactive: #65676b;
+            --footer-icon-active: #000000;
+            --featured-border: #000000;
+            --check-icon-color: #28a745;
+            --special-icon-bg: #343a40;
+            --special-icon-color: #ffffff;
+            --special-icon-active-bg: #000000;
+            --product-section-bg: #f0f2f5;
+            --menu-bg: #ffffff;
+            --overlay-bg: rgba(0, 0, 0, 0.5);
+            --notification-bg: #28a745;
+            --notification-color: white;
+            --badge-bg: var(--btn-primary-bg);
+            --badge-color: white;
+        }
+
+        .dark-theme {
+            /* Tema Escuro */
+            --body-bg: #1e1e1e;
+            --app-bg: #2c2c2c;
+            --text-primary: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --border-color: #3f3f3f;
+            --header-icon-color: #f0f0f0;
+            --search-bg: #3f3f3f;
+            --card-bg: #3a3a3a;
+            --card-border: #4a4a4a;
+            --btn-dark-bg: #1e1e1e;
+            --btn-primary-bg: #1e1e1e;
+            --footer-bg: #1e1e1e;
+            --footer-icon-inactive: #888;
+            --footer-icon-active: #ffffff;
+            --featured-border: #5a5a5a;
+            --check-icon-color: #4CAF50;
+            --special-icon-bg: #f0f0f0;
+            --special-icon-color: #1e1e1e;
+            --special-icon-active-bg: #ffffff;
+            --product-section-bg: #2c2c2c;
+            --menu-bg: #2c2c2c;
+            --badge-bg: #f0f0f0;
+            --badge-color: #1e1e1e;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            background-color: var(--body-bg);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--app-bg);
+            color: var(--text-primary);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding-bottom: 75px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background-color: var(--app-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header .menu-toggle { font-size: 22px; color: var(--header-icon-color); cursor: pointer; }
+        .header .logo { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
+        .header .search-bar { flex-grow: 1; max-width: 450px; display: flex; align-items: center; background-color: var(--search-bg); border-radius: 20px; padding: 8px 12px; margin: 0 15px; transition: background-color 0.3s ease; }
+        .search-bar i { color: var(--text-secondary); margin-right: 8px; font-size: 0.9em; }
+        .search-bar input { flex-grow: 1; background: none; border: none; color: var(--text-primary); font-size: 14px; outline: none; }
+        .search-bar input::placeholder { color: var(--text-secondary); }
+
+        /* Menu Lateral */
+        .side-menu { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background-color: var(--menu-bg); z-index: 1002; transform: translateX(-100%); transition: transform 0.3s ease-in-out; display: flex; flex-direction: column; padding: 20px; box-shadow: 4px 0px 15px rgba(0,0,0,0.1); }
+        .side-menu.open { transform: translateX(0); }
+        .menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .menu-header .logo-menu { font-weight: bold; font-size: 20px; color: var(--text-primary); }
+        .close-menu-btn { font-size: 28px; cursor: pointer; color: var(--text-secondary); }
+        .side-menu nav ul { list-style: none; padding: 0; margin: 0; }
+        .side-menu nav a { display: block; padding: 15px 10px; color: var(--text-primary); text-decoration: none; font-size: 18px; border-radius: 8px; transition: background-color 0.2s ease; position: relative;}
+        .side-menu nav a:hover { background-color: var(--search-bg); }
+        .side-menu nav a i { margin-right: 15px; width: 24px; text-align: center; color: var(--text-secondary); }
+        .cart-badge { background-color: var(--badge-bg); color: var(--badge-color); border-radius: 50%; padding: 1px 5px; font-size: 10px; font-weight: bold; position: absolute; display: none; }
+        .cart-badge.visible { display: block; }
+        .menu-cart-badge { top: 12px; right: 12px; }
+
+        /* Overlay */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay-bg); z-index: 1001; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .overlay.visible { opacity: 1; visibility: visible; }
+        
+        /* Botão de Tema Flutuante */
+        .theme-toggle-fab { position: fixed; bottom: 95px; right: 25px; width: 50px; height: 50px; background-color: var(--special-icon-bg); color: var(--special-icon-color); border-radius: 50%; display: grid; place-items: center; font-size: 22px; cursor: pointer; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; }
+        .theme-toggle-fab:hover { transform: scale(1.1); }
+
+        /* Banner */
+        .banner { padding: 0; margin: 0; }
+        .banner img { width: 100%; display: block; max-height: 180px; object-fit: cover; }
+
+        /* Seção Desafios */
+        .challenges { padding: 0 15px; margin-top: 25px; }
+        .challenges-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .challenges-header h2 { font-size: 16px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; }
+        .challenges-header h2 i { margin-left: 8px; }
+        .add-challenge-btn { background: var(--btn-primary-bg); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; cursor: pointer; display: grid; place-items: center; transition: background-color .2s ease; }
+        .add-challenge-btn:hover { opacity: 0.9; }
+
+        .challenges-list .challenge-item { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border-color); }
+        .challenge-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .challenge-info span { font-weight: 600; font-size: 14px; display: flex; align-items: center; }
+        .challenge-info .fa-medal { color: #FFD700; margin-right: 8px; }
+        .challenge-actions button { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; margin-left: 8px; }
+        
+        .progress-display { display: flex; align-items: center; gap: 10px; }
+        .progress-bar-container { flex-grow: 1; background: var(--search-bg); border-radius: 10px; height: 12px; overflow: hidden; }
+        .progress-bar { background: var(--check-icon-color); height: 100%; width: 0; border-radius: 10px; transition: width .3s ease; }
+        .progress-display span { font-size: 12px; font-weight: 600; }
+
+        .challenge-counter { display: flex; align-items: center; gap: 10px; }
+        .challenge-counter span { font-weight: 600; }
+        .counter-btn { background: var(--search-bg); border: 1px solid var(--border-color); color: var(--text-primary); width: 25px; height: 25px; border-radius: 50%; cursor: pointer; }
+
+        /* Seção "For You" e Carrossel */
+        .for-you { text-align: center; font-size: 16px; color: var(--text-secondary); margin: 25px 0 15px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+        .carousel { position: relative; padding: 0 15px; }
+        .carousel-wrapper { overflow: hidden; border-radius: 12px; }
+        .carousel-images { display: flex; transition: transform .5s ease-in-out; }
+        .carousel-image-wrapper { min-width: 100%; position: relative; }
+        .carousel-img {
+            width: 100%;
+            display: block;
+            aspect-ratio: 2 / 1; /* Proporção bem baixa para mobile */
+            object-fit: cover;
+        }
+        .image-caption { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 10px; text-align: center; font-size: 14px; font-weight: 600; }
+        .carousel .prev, .carousel .next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; z-index: 10; font-size: 16px; display: grid; place-items: center;}
+        .carousel .prev { left: 25px; }
+        .carousel .next { right: 25px; }
+
+        /* Modal */
+        .modal { position: fixed; z-index: 1003; left: 0; top: 0; width: 100%; height: 100%; background: var(--overlay-bg); display: none; justify-content: center; align-items: center; }
+        .modal.open { display: flex; }
+        .modal-content { background: var(--app-bg); padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); width: 90%; max-width: 400px; }
+        .modal-content .close-btn { float: right; font-size: 28px; cursor: pointer; color: var(--text-secondary); }
+        .modal-content h3 { margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 14px; color: var(--text-secondary); }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--search-bg); color: var(--text-primary); font-size: 16px; box-sizing: border-box; }
+        .save-btn { width: 100%; padding: 12px; background: var(--btn-primary-bg); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+
+        /* Footer */
+        .footer-nav { 
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 1200px; 
+            display: flex; justify-content: space-around; align-items: flex-end; background-color: var(--footer-bg); 
+            padding: 8px 0; border-top: 1px solid var(--border-color); z-index: 998; transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--footer-icon-inactive); font-size: 10px; padding: 5px; flex: 1; text-align: center; transition: color 0.3s ease; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: var(--footer-icon-active); }
+        .nav-item:hover:not(.active) { color: var(--text-primary); }
+        .nav-item.special-item { position: relative; }
+        .nav-item.special-item .icon-wrapper { background-color: var(--special-icon-bg); border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; margin-bottom: 2px; margin-top: -25px; border: 4px solid var(--footer-bg); box-shadow: 0 -3px 6px rgba(0,0,0,0.1); transition: background-color 0.3s ease, border-color 0.3s ease; position: relative; }
+        .nav-item.special-item .icon-wrapper i { font-size: 24px; color: var(--special-icon-color); margin-bottom: 0; }
+        .nav-item.special-item.active .icon-wrapper { background-color: var(--special-icon-active-bg); }
+        .nav-item.special-item.active span { color: var(--footer-icon-active); }
+
+        /* Notificação */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translate(-50%, 150px); /* Começa fora da tela */
+            background-color: var(--notification-bg);
+            color: var(--notification-color);
+            padding: 12px 25px;
+            border-radius: 8px;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .notification.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0);
+        }
+
+        /* Media Query para Desktop */
+        @media (min-width: 768px) {
+            .banner img { max-height: 400px; }
+            .carousel { padding: 0 40px; }
+            .carousel-img { aspect-ratio: 16/9; } /* Restaura para um formato mais alto no desktop */
+            .challenges { padding: 0 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="side-menu" class="side-menu">
+        <div class="menu-header"> <span class="logo-menu">Move Minds</span> <span id="close-menu-btn" class="close-menu-btn">&times;</span> </div>
+        <nav>
+            <ul>
+                <li><a href="home.html"><i class="fas fa-home"></i>Início</a></li>
+                <li><a href="shop.html"><i class="fas fa-rocket"></i>Planos</a></li>
+                <li><a href="shop.html"><i class="fas fa-shopping-bag"></i>Produtos</a></li>
+                <li><a href="progresso.html"><i class="fas fa-chart-line"></i>Progresso</a></li>
+                <li><a href="carrinho.php"><i class="fas fa-shopping-cart"></i>Carrinho <span id="menu-cart-badge" class="cart-badge">0</span></a></li>
+                <li><a href="perfil.php"><i class="fas fa-user-circle"></i>Perfil</a></li>
+                <li><a href="config.php"><i class="fas fa-cog"></i>Configurações</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div id="overlay" class="overlay"></div>
+
+    <div class="main-container" id="main-container">
+        <header class="header">
+            <i class="fas fa-bars menu-toggle" id="menu-toggle"></i>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar">
+            </div>
+            <img src="./assets/logo.png" alt="Logo MN" class="logo">
+        </header>
+        
+        <div class="theme-toggle-fab" id="theme-toggle">
+             <i class="fas fa-moon"></i>
+        </div>
+
+        <section class="banner"> 
+            <img src="./assets/banner.png" alt="Banner Principal"> 
+        </section>
+        
+        <section class="challenges">
+            <div class="challenges-header">
+                <h2>SEUS DESAFIOS <i class="fas fa-bullseye"></i></h2>
+                <button class="add-challenge-btn" aria-label="Adicionar desafio">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="challenges-list" id="challengesList">
+                <!-- Desafios serão adicionados dinamicamente aqui -->
+            </div>
+        </section>
+
+        <div class="for-you">PARA VOCÊ</div>
+        
+        <section class="carousel" aria-label="Carrossel de academias">
+            <button aria-label="Anterior" class="prev"> <i class="fas fa-chevron-left"></i> </button>
+            <div class="carousel-wrapper">
+                <div class="carousel-images">
+                    <div class="carousel-image-wrapper">
+                        <img src="https://images.totalpass.com/public/1280x720/czM6Ly90cC1pbWFnZS1hZG1pbi1wcm9kL2d5bXMvOXp5cHg4aGRyNHRzMW41ZWp5amMxYnN2YnA3YW9ueWtmd21jN2lyZjl5Z3JpMGFnOTdvMnB4b205eG42" alt="Academia 1" class="carousel-img" />
+                        <div class="image-caption">GuaráFit a 2 km de você!</div>
+                    </div>
+                    <div class="carousel-image-wrapper">
+                        <img src="https://cdn.douradosnews.com.br/img/c/780/530/dn_arquivo/2021/12/rede-smartfit.jpeg" alt="Academia 2" class="carousel-img" />
+                        <div class="image-caption">SmartFit a 1 km de você!</div>
+                    </div>
+                    <div class="carousel-image-wrapper">
+                        <img src="https://blog.sistemapacto.com.br/wp-content/uploads/2022/04/panobianco-1-1024x653.jpg" alt="Academia 3" class="carousel-img" />
+                        <div class="image-caption">Panobianco a 3 km de você!</div>
+                    </div>
+                </div>
+            </div>
+            <button aria-label="Próximo" class="next"> <i class="fas fa-chevron-right"></i> </button>
+        </section>
+        
+        <footer class="footer-nav"> 
+            <a href="home.html" class="nav-item special-item active" data-target="inicio"> 
+                <div class="icon-wrapper"> <i class="fas fa-home"></i> </div>
+                <span>Início</span> 
+            </a> 
+            <a href="progresso.html" class="nav-item" data-target="progresso"> <i class="fas fa-chart-line"></i> <span>Progresso</span> </a> 
+            <a href="shop.html" class="nav-item" data-target="loja"> <i class="fas fa-shopping-bag"></i> <span>Loja</span> </a> 
+            <a href="config.php" class="nav-item" data-target="configuracoes"> <i class="fas fa-cog"></i> <span>Configurações</span> </a> 
+            <a href="perfil.php" class="nav-item" data-target="perfil"> <i class="fas fa-user-circle"></i> <span>Perfil</span> </a> 
+        </footer>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+    
+    <div class="modal" id="challengeModal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modalTitle">Adicionar Novo Desafio</h3>
+            <form id="challengeForm">
+                <input type="hidden" id="challengeId">
+                <div class="form-group">
+                    <label for="challengeName">Nome do Desafio</label>
+                    <input type="text" id="challengeName" required>
+                </div>
+                <div class="form-group">
+                    <label for="challengeType">Tipo de Desafio</label>
+                    <select id="challengeType" required>
+                        <option value="progress">Progresso (0-100%)</option>
+                        <option value="count">Contador (X/Y)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="targetValueGroup">
+                    <label for="targetValue">Valor Alvo</label>
+                    <input type="number" id="targetValue" required>
+                </div>
+                <div class="form-group" id="currentValueGroup" style="display: none;">
+                    <label for="currentValue">Valor Atual</label>
+                    <input type="number" id="currentValue" value="0" required>
+                </div>
+                <button type="submit" class="save-btn">Salvar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            const themeIcon = themeToggle.querySelector('i');
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sideMenu = document.getElementById('side-menu');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const overlay = document.getElementById('overlay');
+            const notification = document.getElementById('notification');
+
+            // Lógica do Menu Lateral
+            function openMenu() { sideMenu.classList.add('open'); overlay.classList.add('visible'); }
+            function closeMenu() { sideMenu.classList.remove('open'); overlay.classList.remove('visible'); }
+
+            menuToggle.addEventListener('click', openMenu);
+            closeMenuBtn.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', closeMenu);
+
+            // Lógica do Tema
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    body.classList.add('dark-theme');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    body.classList.remove('dark-theme');
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            };
+            
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const isDark = body.classList.contains('dark-theme');
+                if (isDark) {
+                    applyTheme('light');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    applyTheme('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+
+            // Lógica de Notificação
+            function showNotification(message) {
+                notification.textContent = message;
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000); // A notificação desaparece após 3 segundos
+            }
+
+            // Lógica do Carrossel
+            const carouselImages = document.querySelector('.carousel-images');
+            const prevBtn = document.querySelector('.carousel .prev');
+            const nextBtn = document.querySelector('.carousel .next');
+            let currentIndex = 0;
+            const totalImages = document.querySelectorAll('.carousel-image-wrapper').length;
+
+            function updateCarousel() {
+                if (carouselImages) {
+                   carouselImages.style.transform = `translateX(-${currentIndex * 100}%)`;
+                }
+            }
+            if(nextBtn){
+                nextBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % totalImages;
+                    updateCarousel();
+                });
+            }
+            if(prevBtn){
+                prevBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+                    updateCarousel();
+                });
+            }
+
+            // Lógica dos Desafios (Modal e CRUD)
+            const addChallengeBtn = document.querySelector('.add-challenge-btn');
+            const modal = document.getElementById('challengeModal');
+            const closeModalBtn = modal.querySelector('.close-btn');
+            const challengeForm = document.getElementById('challengeForm');
+            const challengesList = document.getElementById('challengesList');
+            const challengeTypeSelect = document.getElementById('challengeType');
+            const currentValueGroup = document.getElementById('currentValueGroup');
+
+            let challenges = JSON.parse(localStorage.getItem('challenges')) || [];
+            let editingChallengeId = null;
+
+            function openModal(challenge = null) {
+                challengeForm.reset();
+                if (challenge) { // Editing existing challenge
+                    editingChallengeId = challenge.id;
+                    document.getElementById('modalTitle').textContent = 'Editar Desafio';
+                    document.getElementById('challengeId').value = challenge.id;
+                    document.getElementById('challengeName').value = challenge.name;
+                    document.getElementById('challengeType').value = challenge.type;
+                    document.getElementById('challengeType').disabled = true;
+                    document.getElementById('targetValue').value = challenge.target;
+                    document.getElementById('currentValue').value = challenge.current;
+                    currentValueGroup.style.display = 'block';
+                } else { // Adding new challenge
+                    editingChallengeId = null;
+                    document.getElementById('modalTitle').textContent = 'Adicionar Novo Desafio';
+                    document.getElementById('challengeType').disabled = false;
+                    currentValueGroup.style.display = 'none'; // Hide when adding
+                }
+                modal.classList.add('open');
+            }
+
+            function closeModal() {
+                modal.classList.remove('open');
+            }
+            
+            function renderChallenges() {
+                challengesList.innerHTML = '';
+                if (challenges.length === 0) {
+                    challengesList.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Sem desafios. Adicione um novo!</p>';
+                    return;
+                }
+                challenges.forEach(challenge => {
+                    const challengeEl = document.createElement('div');
+                    challengeEl.className = 'challenge-item';
+                    challengeEl.dataset.id = challenge.id;
+
+                    let content = `
+                        <div class="challenge-info">
+                            <span><i class="fas fa-medal"></i>${challenge.name}</span>
+                            <div class="challenge-actions">
+                                <button class="edit-btn"><i class="fas fa-pen"></i></button>
+                                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+
+                    if (challenge.type === 'progress') {
+                        content += `
+                            <div class="challenge-counter">
+                                <button class="counter-btn minus-btn">-</button>
+                                <div class="progress-display">
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="width: ${challenge.current}%;"></div>
+                                    </div>
+                                    <span>${challenge.current}%</span>
+                                </div>
+                                <button class="counter-btn plus-btn">+</button>
+                            </div>
+                        `;
+                    } else { // count
+                        content += `
+                            <div class="challenge-counter">
+                                <button class="counter-btn minus-btn">-</button>
+                                <span>${challenge.current} / ${challenge.target}</span>
+                                <button class="counter-btn plus-btn">+</button>
+                            </div>
+                        `;
+                    }
+                    challengeEl.innerHTML = content;
+                    challengesList.appendChild(challengeEl);
+                });
+            }
+            
+            // Event Listeners
+            addChallengeBtn.addEventListener('click', () => openModal());
+            closeModalBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+
+            challengeForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newChallenge = {
+                    id: editingChallengeId || Date.now(),
+                    name: document.getElementById('challengeName').value,
+                    type: document.getElementById('challengeType').value,
+                    target: parseInt(document.getElementById('targetValue').value),
+                    current: document.getElementById('currentValue').value && editingChallengeId ? parseInt(document.getElementById('currentValue').value) : 0,
+                };
+
+                if (editingChallengeId) {
+                    challenges = challenges.map(c => c.id === editingChallengeId ? newChallenge : c);
+                } else {
+                    challenges.push(newChallenge);
+                }
+                localStorage.setItem('challenges', JSON.stringify(challenges));
+                renderChallenges();
+                closeModal();
+            });
+
+            challengesList.addEventListener('click', (e) => {
+                const challengeItem = e.target.closest('.challenge-item');
+                if (!challengeItem) return;
+
+                const id = parseInt(challengeItem.dataset.id);
+                const challenge = challenges.find(c => c.id === id);
+                if (!challenge) return;
+
+                if (e.target.closest('.edit-btn')) {
+                    openModal(challenge);
+                } else if (e.target.closest('.delete-btn')) {
+                    challenges = challenges.filter(c => c.id !== id);
+                    localStorage.setItem('challenges', JSON.stringify(challenges));
+                    renderChallenges();
+                } else if (e.target.closest('.plus-btn')) {
+                    let target = challenge.type === 'progress' ? 100 : challenge.target;
+                    let increment = challenge.type === 'progress' ? 10 : 1;
+                    if (challenge.current < target) {
+                        challenge.current = Math.min(challenge.current + increment, target);
+                        if (challenge.current >= target) {
+                           showNotification(`Desafio "${challenge.name}" concluído! 🎉`);
+                        }
+                        localStorage.setItem('challenges', JSON.stringify(challenges));
+                        renderChallenges();
+                    }
+                } else if (e.target.closest('.minus-btn')) {
+                    let decrement = challenge.type === 'progress' ? 10 : 1;
+                    if (challenge.current > 0) {
+                        challenge.current = Math.max(challenge.current - decrement, 0);
+                        localStorage.setItem('challenges', JSON.stringify(challenges));
+                        renderChallenges();
+                    }
+                }
+            });
+
+            renderChallenges(); // Renderizar desafios iniciais
+        });
+    </script>
+</body>
+</html>
